@@ -18,7 +18,7 @@ try {
     Connect-AzAccount -Subscription $subscriptionId -ErrorAction Stop | Out-Null
 }
 catch {
-    Write-Host "Failed to connect: $_" -ForegroundColor Red
+    Write-Host "Failed to connect: $_"
     exit
 }
 
@@ -37,7 +37,7 @@ $results = @()
 
 foreach ($solution in $solutions) {
     $solutionName = $solution.properties.displayName
-    Write-Host "`nProcessing solution: $solutionName" -ForegroundColor Cyan
+    Write-Host "`nProcessing solution: $solutionName"
     
     # Get templates for this solution
     $templatesUri = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.OperationalInsights/workspaces/$workspaceName/providers/Microsoft.SecurityInsights/contentTemplates?api-version=$apiVersion"
@@ -73,7 +73,7 @@ foreach ($solution in $solutions) {
                 Techniques  = $rule.properties.techniques -join ','
             }
 
-            Write-Host "  ✓ $($rule.properties.displayName)" -ForegroundColor Green
+            Write-Host "  ✓ $($rule.properties.displayName)"
         }
         catch {
             $results += [PSCustomObject]@{
@@ -83,17 +83,11 @@ foreach ($solution in $solutions) {
                 Tactics     = ""
                 Techniques  = ""
             }
-            Write-Host "  ✗ $($template.properties.displayName) - $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "  ✗ $($template.properties.displayName) - $($_.Exception.Message)"
         }
     }
 }
 
 # Output results
-Write-Host "`n=== EXECUTION SUMMARY ===" -ForegroundColor Cyan
+Write-Host "`n=== EXECUTION SUMMARY ==="
 $results | Format-Table -AutoSize
-
-# Export to CSV
-$timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
-$csvPath = "SentinelRules_$timestamp.csv"
-$results | Export-Csv -Path $csvPath -NoTypeInformation
-Write-Host "`nDetailed report saved to: $csvPath" -ForegroundColor Green
