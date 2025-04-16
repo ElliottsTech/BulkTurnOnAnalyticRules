@@ -5,10 +5,10 @@
 #>
 
 # Your environment parameters
-$subscriptionId = "<subscription ID>"
-$resourceGroupName = "<LogAnalyticWorkspace_ResourceGroupName>"
-$workspaceName = "<LogAnalyticWorkspace_Name>"
-$enableRules = "Yes"  # "Yes" to enable, "No" to create disabled
+$subscriptionId = Read-Host "Enter your subscription ID"
+$resourceGroupName = Read-Host "Enter your Log Analytic Workspace resource group name"
+$workspaceName = Read-Host "Enter your Log Analytic Workspace name"
+$enableRules = Read-Host "Enable rules? (Yes/No)"
 
 # API Configuration
 $apiVersion = "2024-10-01-preview"  # Supports MITRE ATT&CK sub-techniques
